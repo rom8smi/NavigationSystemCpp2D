@@ -1,0 +1,1 @@
+scons platform=linux arch=x86_64 target=template_debug custom_compiler_prefix="x86_64-unknown-linux-gnu-"

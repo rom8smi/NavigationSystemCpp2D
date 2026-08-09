@@ -1,0 +1,9 @@
+*DS_Store
+.vscode/
+libgdexample.dylib
+/godot-cpp/bin/
+/project/godot_project/bin/
+/exports/
+*.o
+*.os
+*.dblite

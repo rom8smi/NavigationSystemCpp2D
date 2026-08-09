@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+import os
+import sys
+
+def add_sources(sources, dir, extension):
+    for f in os.listdir(dir):
+        if f.endswith("." + extension):
+            sources.append(dir + "/" + f)
+
+env = SConscript("../godot-cpp/SConstruct")
+
+# For the reference:
+# - CCFLAGS are compilation flags shared between C and C++
+# - CFLAGS are for C-specific compilation flags
+# - CXXFLAGS are for C++-specific compilation flags
+# - CPPFLAGS are for pre-processor flags
+# - CPPDEFINES are for pre-processor defines
+# - LINKFLAGS are for linking flags
+
+# tweak this if you want to use different folders, or more folders, to store your source code in.
+env.Append(CPPPATH=["src/"])
+sources = []
+add_sources(sources, "src", "cpp")
+add_sources(sources, "src/rts", "cpp")
+add_sources(sources, "src/rts/debug", "cpp")
+add_sources(sources, "src/rts/file", "cpp")
+add_sources(sources, "src/rts/godot_wrapper", "cpp")
+add_sources(sources, "src/rts/math", "cpp")
+add_sources(sources, "src/rts/mesh", "cpp")
+add_sources(sources, "src/rts/navigation", "cpp")
+add_sources(sources, "src/rts/navigation/constrainautor", "cpp")
+add_sources(sources, "src/rts/navigation/delaunator", "cpp")
+add_sources(sources, "src/rts/navigation/drawers", "cpp")
+add_sources(sources, "src/rts/navigation/navigation_tests", "cpp")
+add_sources(sources, "src/rts/scene", "cpp")
+add_sources(sources, "src/rts/ui", "cpp")
+
+if env["platform"] == "macos":
+    library = env.SharedLibrary(
+        "godot_project/bin/libgdexample.{}.{}.framework/libgdexample.{}.{}".format(
+            env["platform"], env["target"], env["platform"], env["target"]
+        ),
+        source=sources,
+    )
+else:
+    library = env.SharedLibrary(
+        "godot_project/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+        source=sources,
+    )
+
+Default(library)
