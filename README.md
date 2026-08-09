@@ -2,7 +2,7 @@
 
 This project contains implementation of the 2D navigation system which can be used for games or other visual 2D simulations. The system includes pathfinding, agents movement along their paths, agents local avoidance and obstacles of any shapes. The navigation system is navigation mesh based. The system benefits from fast constrained triangulation calculations when using derived and adapted Delaunator and Constrainautor libraries (see ThirdPartyNotices.md).
 
-Note that this project used GDExtension and needs appropriate setup. So it is recommended for more advanced users who are looking for C++ performance. For beginners, it is recommended to start with Unity C# version of the project.
+Note that this project used GDExtension and needs appropriate setup. So it is recommended for more advanced users who are looking for C++ performance. For beginners, it is recommended to start with Unity C# version of the project which can be found in https://github.com/rom8smi/NavigationSystemUnityCs2D.
 
 There are various example scenes set in the project to cover different kind of scenarios. Here are some examples of these.
 
