@@ -112,6 +112,13 @@ namespace NavigationSystemCode
         agentNeighbourCounts.push_back(0);
     }
 
+    bool NavigationSystem::HasPath(int agentIndex)
+    {
+        return agents[agentIndex].followingPath ||
+               agents[agentIndex].destinationUpdateNeeded ||
+               agents[agentIndex].searchPathLater;
+    }
+
     void NavigationSystem::SetDestination(int agentIndex, Float2 &destination)
     {
         agents[agentIndex].destinationUpdateNeeded = true;

@@ -39,6 +39,7 @@ namespace NavigationSystemCode
         void process(
             float delta);
         void AddAgent(Float2 &position, int agentTypeIndex, int unitIndex, float speed);
+        bool HasPath(int agentIndex);
         void SetDestination(int agentIndex, Float2 &destination);
         void SetDestinationInstant(int agentIndex, Float2 &destination);
         void stop(int agent_index);

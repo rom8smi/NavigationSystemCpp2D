@@ -284,9 +284,7 @@ namespace NavigationSystemCode
 
             for (int i = 0; i < random_dynamic_agents_count; i++)
             {
-                if (!navigation_system.agents[i].followingPath &&
-                    !navigation_system.agents[i].destinationUpdateNeeded &&
-                    !navigation_system.agents[i].searchPathLater &&
+                if (!navigation_system.HasPath(i) &&
                     random.next_float() < remove_probability)
                 {
                     new_indices[i] = -1;

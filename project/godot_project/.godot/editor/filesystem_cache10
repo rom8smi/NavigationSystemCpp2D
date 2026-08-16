@@ -1,10 +1,10 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1786302589
-debug.log::TextFile::-1::1786301254::0::1::::<><><>0<>0<><>::
+::res://::1786888094
+debug.log::TextFile::-1::1786302632::0::1::::<><><>0<>0<><>::
 example.gdextension::GDExtension/GDExtension::5140778887240510662::1688674118::0::1::::<><><>0<>0<><>::
 export_presets.cfg::TextFile::-1::1781299585::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D/CompressedTexture2D::3483192025018904349::1680026160::1743866676::1::::<><><>0<>0<>4797abf4f887acd82ca70b2209f1fe44<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 main.tscn::PackedScene::7115603074940376941::1772997295::0::1::::<><><>0<>0<><>::
 ::res://assets/::1786117123
 ::res://bin/::1786294547
-::res://bin/libgdexample.macos.template_debug.framework/::1786301007
+::res://bin/libgdexample.macos.template_debug.framework/::1786888073
