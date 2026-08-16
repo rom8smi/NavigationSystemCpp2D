@@ -129,6 +129,11 @@ namespace NavigationSystemCode
             }
 
             Debug::index_assert(edg, del.halfedges.size(), "bbb6");
+            if (edg < 0)
+            {
+                return;
+            }
+
             int adj = del.halfedges[edg];
             int bot = PrevEdge(edg);
             int top = PrevEdge(adj);
@@ -136,8 +141,26 @@ namespace NavigationSystemCode
 
             Debug::index_assert(edg, del.triangles.size(), "bbb7");
             Debug::index_assert(adj, del.triangles.size(), "bbb8");
+
+            if (adj < 0)
+            {
+                return;
+            }
+
             Debug::index_assert(bot, del.triangles.size(), "bbb9");
+
+            if (bot < 0)
+            {
+                return;
+            }
+
             Debug::index_assert(top, del.triangles.size(), "bbb10");
+
+            if (top < 0)
+            {
+                return;
+            }
+
             bool convex = IntersectSegments(
                 del.triangles[edg],
                 del.triangles[adj],
