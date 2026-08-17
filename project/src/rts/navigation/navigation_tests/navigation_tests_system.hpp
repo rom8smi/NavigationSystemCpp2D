@@ -93,6 +93,13 @@ namespace NavigationSystemCode
         void create_circular_spawner_agents(
             ManualAgentCircularSpawner &manual_agent_circular_spawner,
             NavigationSystem &navigation_system);
+        void create_agent(
+            Float2 &position_xz,
+            Float3 &scale,
+            Rgba &color,
+            int agent_type,
+            float speed,
+            NavigationSystem &navigation_system);
         void set_scene_to_load(
             int scene_index,
             NavigationSystem &navigation_system,

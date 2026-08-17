@@ -26,6 +26,7 @@ namespace NavigationSystemCode
         button_names.push_back("ChainedObstacles");
         button_names.push_back("Circles");
         button_names.push_back("RectangleSpawners");
+        button_names.push_back("RectangleSpawnersCircleObstacles");
         button_names.push_back("RectangleSpawnersWithObstacles");
         button_names.push_back("RandomDynamicObstacles");
         button_names.push_back("RandomObstacles");
@@ -38,6 +39,7 @@ namespace NavigationSystemCode
         int chained_obstacles_index = NavigationTestsSceneIndices::CHAINED_OBSTACLES;
         int circles_index = NavigationTestsSceneIndices::CIRCLES;
         int rectangle_spawners_index = NavigationTestsSceneIndices::RECTANGLE_SPAWNERS;
+        int rectangle_spawners_circle_obstacles_index = NavigationTestsSceneIndices::RECTANGLE_SPAWNERS_CIRCLE_OBSTACLES;
         int rectangle_spawners_with_obstacles_index = NavigationTestsSceneIndices::RECTANGLE_SPAWNERS_WITH_OBSTACLES;
         int random_dynamic_obstacles_index = NavigationTestsSceneIndices::RANDOM_DYNAMIC_OBSTACLES;
         int random_obstacles_index = NavigationTestsSceneIndices::RANDOM_OBSTACLES;
@@ -50,6 +52,7 @@ namespace NavigationSystemCode
         scene_indices.push_back(chained_obstacles_index);
         scene_indices.push_back(circles_index);
         scene_indices.push_back(rectangle_spawners_index);
+        scene_indices.push_back(rectangle_spawners_circle_obstacles_index);
         scene_indices.push_back(rectangle_spawners_with_obstacles_index);
         scene_indices.push_back(random_dynamic_obstacles_index);
         scene_indices.push_back(random_obstacles_index);

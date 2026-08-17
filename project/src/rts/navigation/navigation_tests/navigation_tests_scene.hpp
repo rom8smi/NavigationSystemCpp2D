@@ -5,6 +5,7 @@
 #include "chained_obstacle_spawner.hpp"
 #include "random_dynamic_obstacles_spawner.hpp"
 #include "random_obstacles_spawner.hpp"
+#include "manual_agent_spawner.hpp"
 #include "manual_agent_rectangular_spawner.hpp"
 #include "manual_agent_circular_spawner.hpp"
 #include "random_dynamic_agents_spawner.hpp"
@@ -22,6 +23,7 @@ namespace NavigationSystemCode
         vector<ChainedObstacleSpawner> chained_obstacle_spawners;
         vector<RandomDynamicObstaclesSpawner> random_dynamic_obstacle_spawners;
         vector<RandomObstaclesSpawner> random_obstacle_spawners;
+        vector<ManualAgentSpawner> manual_agent_spawners;
         vector<ManualAgentRectangularSpawner> manual_agent_rectangular_spawners;
         vector<ManualAgentCircularSpawner> manual_agent_circular_spawners;
         vector<RandomDynamicAgentsSpawner> random_dynamic_agent_spawners;
@@ -36,6 +38,7 @@ namespace NavigationSystemCode
         void create_chained_obstacles_scene();
         void create_circles_scene();
         void create_rectangle_spawners_scene();
+        void create_rectangle_spawners_circle_obstacles_scene();
         void create_rectangle_spawners_with_obstacles_scene();
         void create_random_dynamic_obstacles_scene();
         void create_random_obstacles_scene();

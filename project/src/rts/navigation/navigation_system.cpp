@@ -10,38 +10,56 @@ namespace NavigationSystemCode
     void NavigationSystem::ready(GodotWorld &godot_world)
     {
         agentTypes = vector<AgentType>{
-            // 0 Infantry
+            // 0 Test1
             AgentType{
                 .radius = 1.0f,
+                .isStatic = false,
                 .speed = 2.5f},
-            // 1 Catapult and Ballista
+            // 1 Test2
             AgentType{
                 .radius = 2.5f,
+                .isStatic = false,
                 .speed = 1.5f},
-            // 2 Horseman and Horse
+            // 2 Test3
             AgentType{
                 .radius = 2.5f,
+                .isStatic = false,
                 .speed = 4.0f},
-            // 3 Phantom and Wizard
+            // 3 Test4
             AgentType{
                 .radius = 1.0f,
+                .isStatic = false,
                 .speed = 2.0f},
-            // 4 Bear
+            // 4 Test5
             AgentType{
                 .radius = 2.5f,
+                .isStatic = false,
                 .speed = 3.0f},
             // 5 Test agent small
             AgentType{
                 .radius = 0.5f,
+                .isStatic = false,
                 .speed = 5.0f},
             // 6 Test agent large
             AgentType{
                 .radius = 0.7f,
+                .isStatic = false,
                 .speed = 5.0f},
             // 7 Test agent medium
             AgentType{
                 .radius = 0.6f,
-                .speed = 5.0f}};
+                .isStatic = false,
+                .speed = 5.0f},
+            // 8 Test circular obstacle
+            AgentType{
+                .radius = 2.0f,
+                .isStatic = true,
+                .speed = 0.0f},
+            // 9 Test6
+            AgentType{
+                .radius = 1.0f,
+                .isStatic = true,
+                .speed = 0.0f}};
 
         largestAgentRadius = 0.0f;
         for (int i = 0; i < agentTypes.size(); i++)

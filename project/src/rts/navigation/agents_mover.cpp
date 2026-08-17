@@ -210,7 +210,10 @@ namespace NavigationSystemCode
             agents[i].localAvoidanceVelocity = avoidanceVelocity;
             agents[i].powerFactorSum = powerFactorSum;
 
-            CalculateFinalVelocities(agents, agentPositions, navMesh, deltaTime, i);
+            if (!agentTypes[agentTypeIndex].isStatic)
+            {
+                CalculateFinalVelocities(agents, agentPositions, navMesh, deltaTime, i);
+            }
         }
     }
 

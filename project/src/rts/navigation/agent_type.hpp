@@ -6,6 +6,7 @@ namespace NavigationSystemCode
     struct AgentType
     {
         float radius;
+        bool isStatic;
         float speed;
     };
 }

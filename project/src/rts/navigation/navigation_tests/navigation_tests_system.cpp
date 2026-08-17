@@ -619,6 +619,26 @@ namespace NavigationSystemCode
     {
         number_of_agents = 0;
 
+        for (int i = 0; i < navigation_tests_scene.manual_agent_spawners.size(); i++)
+        {
+            int agent_type = navigation_tests_scene.manual_agent_spawners[i].agent_type;
+            Float3 scale = Float3(1.0f, 1.0f, 1.0f);
+
+            if (navigation_system.agentTypes[agent_type].isStatic)
+            {
+                float size = 2.0f * navigation_system.agentTypes[agent_type].radius;
+                scale = Float3(size, size, size);
+            }
+
+            create_agent(
+                navigation_tests_scene.manual_agent_spawners[i].position,
+                scale,
+                navigation_tests_scene.manual_agent_spawners[i].color,
+                agent_type,
+                navigation_system.agentTypes[agent_type].speed,
+                navigation_system);
+        }
+
         for (int i = 0; i < navigation_tests_scene.manual_agent_rectangular_spawners.size(); i++)
         {
             random.set_seed(navigation_tests_scene.manual_agent_rectangular_spawners[i].seed);
@@ -662,13 +682,10 @@ namespace NavigationSystemCode
         int agent_type,
         bool add_random_dynamic_agent)
     {
+        Float3 scale = Float3(1.0f, 1.0f, 1.0f);
+
         for (int i = 0; i < number_to_spawn; i++)
         {
-            int index_on_multimesh = agents_multimesh.get_used_instance_count();
-            int multi_mesh_count = index_on_multimesh + 1;
-            agents_multimesh.set_instance_count(multi_mesh_count);
-            agents_multimesh.add_instance_to_buffer();
-
             float x = random.next_float(
                 manual_agent_rectangular_spawner.center.x - 0.5f * manual_agent_rectangular_spawner.size.x,
                 manual_agent_rectangular_spawner.center.x + 0.5f * manual_agent_rectangular_spawner.size.x);
@@ -677,24 +694,23 @@ namespace NavigationSystemCode
                 manual_agent_rectangular_spawner.center.y + 0.5f * manual_agent_rectangular_spawner.size.y);
 
             Float2 position_xz = Float2(x, y);
-            Float3 position = Float3(x, 1.0f, y);
+            int agent_instance_index = number_of_agents;
 
-            Float3 scale = Float3(1.0f, 1.0f, 1.0f);
-            Float3x3 basis = Float3x3::from_scale(scale);
+            create_agent(
+                position_xz,
+                scale,
+                manual_agent_rectangular_spawner.color,
+                manual_agent_rectangular_spawner.agent_type,
+                5.0f,
+                navigation_system);
 
-            agents_multimesh.update_instance_position_basis(index_on_multimesh, position, basis);
-            agents_multimesh.update_instance_color(index_on_multimesh, manual_agent_rectangular_spawner.color);
-
-            navigation_system.AddAgent(position_xz, manual_agent_rectangular_spawner.agent_type, -1, 5.0f);
-            navigation_system.SetDestination(number_of_agents, manual_agent_rectangular_spawner.destination);
+            navigation_system.SetDestination(agent_instance_index, manual_agent_rectangular_spawner.destination);
 
             if (add_random_dynamic_agent)
             {
                 navigation_tests_scene.random_dynamic_agents.push_back(RandomDynamicAgent{
                     .agent_type = agent_type});
             }
-
-            number_of_agents++;
         }
 
         agents_multimesh.set_buffer();
@@ -704,37 +720,55 @@ namespace NavigationSystemCode
         ManualAgentCircularSpawner &manual_agent_circular_spawner,
         NavigationSystem &navigation_system)
     {
+        Float3 scale = Float3(1.0f, 1.0f, 1.0f);
+
         for (int i = 0; i < manual_agent_circular_spawner.number_to_spawn; i++)
         {
-            int index_on_multimesh = agents_multimesh.get_used_instance_count();
-            int multi_mesh_count = index_on_multimesh + 1;
-            agents_multimesh.set_instance_count(multi_mesh_count);
-            agents_multimesh.add_instance_to_buffer();
-
             Float2 position_xz = VectorUtils::random_inside_unit_circle(random) *
                                      manual_agent_circular_spawner.radius +
                                  manual_agent_circular_spawner.center;
+            int agent_instance_index = number_of_agents;
 
-            Float3 position = Float3(position_xz.x, 1.0f, position_xz.y);
-
-            Float3 scale = Float3(1.0f, 1.0f, 1.0f);
-            Float3x3 basis = Float3x3::from_scale(scale);
-
-            agents_multimesh.update_instance_position_basis(index_on_multimesh, position, basis);
-            agents_multimesh.update_instance_color(index_on_multimesh, manual_agent_circular_spawner.color);
-
-            navigation_system.AddAgent(position_xz, manual_agent_circular_spawner.agent_type, -1, 5.0f);
+            create_agent(
+                position_xz,
+                scale,
+                manual_agent_circular_spawner.color,
+                manual_agent_circular_spawner.agent_type,
+                5.0f,
+                navigation_system);
 
             if (manual_agent_circular_spawner.set_destination_opposite_in_circle)
             {
                 Float2 destination = -position_xz;
-                navigation_system.SetDestination(number_of_agents, destination);
+                navigation_system.SetDestination(agent_instance_index, destination);
             }
-
-            number_of_agents++;
         }
 
         agents_multimesh.set_buffer();
+    }
+
+    void NavigationTestsSystem::create_agent(
+        Float2 &position_xz,
+        Float3 &scale,
+        Rgba &color,
+        int agent_type,
+        float speed,
+        NavigationSystem &navigation_system)
+    {
+        int index_on_multimesh = agents_multimesh.get_used_instance_count();
+        int multi_mesh_count = index_on_multimesh + 1;
+        agents_multimesh.set_instance_count(multi_mesh_count);
+        agents_multimesh.add_instance_to_buffer();
+
+        Float3 position = Float3(position_xz.x, 1.0f, position_xz.y);
+        Float3x3 basis = Float3x3::from_scale(scale);
+
+        agents_multimesh.update_instance_position_basis(index_on_multimesh, position, basis);
+        agents_multimesh.update_instance_color(index_on_multimesh, color);
+
+        navigation_system.AddAgent(position_xz, agent_type, -1, speed);
+
+        number_of_agents++;
     }
 
     void NavigationTestsSystem::set_scene_to_load(

@@ -29,6 +29,10 @@ namespace NavigationSystemCode
         {
             create_rectangle_spawners_scene();
         }
+        else if (current_scene_index == NavigationTestsSceneIndices::RECTANGLE_SPAWNERS_CIRCLE_OBSTACLES)
+        {
+            create_rectangle_spawners_circle_obstacles_scene();
+        }
         else if (current_scene_index == NavigationTestsSceneIndices::RECTANGLE_SPAWNERS_WITH_OBSTACLES)
         {
             create_rectangle_spawners_with_obstacles_scene();
@@ -257,6 +261,40 @@ namespace NavigationSystemCode
                 .seed = 1});
     }
 
+    void NavigationTestsScene::create_rectangle_spawners_circle_obstacles_scene()
+    {
+        manual_agent_rectangular_spawners.push_back(
+            ManualAgentRectangularSpawner{
+                .color = Rgba(1.0f, 0.0f, 0.0f, 1.0f),
+                .center = Float2(-20.0f, 0.0f),
+                .size = Float2(30.0f, 30.0f),
+                .number_to_spawn = 400,
+                .destination = Float2(35.0f, 0.0f),
+                .agent_type = 5,
+                .seed = 0});
+
+        manual_agent_rectangular_spawners.push_back(
+            ManualAgentRectangularSpawner{
+                .color = Rgba(0.0f, 0.0f, 1.0f, 1.0f),
+                .center = Float2(20.0f, 0.0f),
+                .size = Float2(30.0f, 30.0f),
+                .number_to_spawn = 400,
+                .destination = Float2(-34.0f, 0.0f),
+                .agent_type = 6,
+                .seed = 1});
+
+        for (int i = 0; i < 7; i++)
+        {
+            Float2 position = Float2(0.0f, -24.0f + i * 8.0f);
+            manual_agent_spawners.push_back(
+                ManualAgentSpawner{
+                    .color = Rgba(0.53f, 0.42f, 0.235f, 1.0f),
+                    .position = position,
+                    .destination = position,
+                    .agent_type = 8});
+        }
+    }
+
     void NavigationTestsScene::create_rectangle_spawners_with_obstacles_scene()
     {
         manual_obstacle_spawners.push_back(ManualObstacleSpawner{
@@ -476,6 +514,7 @@ namespace NavigationSystemCode
         chained_obstacle_spawners.clear();
         random_dynamic_obstacle_spawners.clear();
         random_obstacle_spawners.clear();
+        manual_agent_spawners.clear();
         manual_agent_rectangular_spawners.clear();
         manual_agent_circular_spawners.clear();
         random_dynamic_agent_spawners.clear();
