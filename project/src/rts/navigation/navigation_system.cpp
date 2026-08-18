@@ -14,52 +14,62 @@ namespace NavigationSystemCode
             AgentType{
                 .radius = 1.0f,
                 .isStatic = false,
-                .speed = 2.5f},
+                .speed = 2.5f,
+                .softLocalAvoidance = false},
             // 1 Test2
             AgentType{
                 .radius = 2.5f,
                 .isStatic = false,
-                .speed = 1.5f},
+                .speed = 1.5f,
+                .softLocalAvoidance = false},
             // 2 Test3
             AgentType{
                 .radius = 2.5f,
                 .isStatic = false,
-                .speed = 4.0f},
+                .speed = 4.0f,
+                .softLocalAvoidance = false},
             // 3 Test4
             AgentType{
                 .radius = 1.0f,
                 .isStatic = false,
-                .speed = 2.0f},
+                .speed = 2.0f,
+                .softLocalAvoidance = false},
             // 4 Test5
             AgentType{
                 .radius = 2.5f,
                 .isStatic = false,
-                .speed = 3.0f},
+                .speed = 3.0f,
+                .softLocalAvoidance = false},
             // 5 Test agent small
             AgentType{
                 .radius = 0.5f,
                 .isStatic = false,
-                .speed = 5.0f},
+                .speed = 5.0f,
+                .softLocalAvoidance = false},
             // 6 Test agent large
             AgentType{
                 .radius = 0.7f,
                 .isStatic = false,
-                .speed = 5.0f},
+                .speed = 5.0f,
+                .softLocalAvoidance = false},
             // 7 Test agent medium
             AgentType{
                 .radius = 0.6f,
                 .isStatic = false,
-                .speed = 5.0f},
+                .speed = 5.0f,
+                .softLocalAvoidance = false},
             // 8 Test circular obstacle
             AgentType{
                 .radius = 2.0f,
                 .isStatic = true,
-                .speed = 0.0f},
+                .speed = 0.0f,
+                .softLocalAvoidance = false},
             // 9 Test6
             AgentType{
                 .radius = 1.0f,
                 .isStatic = true,
-                .speed = 0.0f}};
+                .speed = 0.0f,
+                .softLocalAvoidance = true}};
 
         largestAgentRadius = 0.0f;
         for (int i = 0; i < agentTypes.size(); i++)

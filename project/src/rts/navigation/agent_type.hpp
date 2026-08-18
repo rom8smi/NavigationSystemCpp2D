@@ -8,6 +8,7 @@ namespace NavigationSystemCode
         float radius;
         bool isStatic;
         float speed;
+        bool softLocalAvoidance;
     };
 }
 

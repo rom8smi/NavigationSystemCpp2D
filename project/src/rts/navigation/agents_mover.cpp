@@ -169,6 +169,8 @@ namespace NavigationSystemCode
         {
             Float2 agentPosition = agentPositions[i];
             Float2 avoidanceVelocity = Float2(0.0f, 0.0f);
+            Float2 softAvoidanceVelocity = Float2(0.0f, 0.0f);
+            bool hasSoftAvoidance = false;
             float powerFactorSum = 0.0f;
             int agentTypeIndex = agents[i].agentTypeIndex;
             float radius = agentTypes[agentTypeIndex].radius;
@@ -197,14 +199,29 @@ namespace NavigationSystemCode
 
                 if (normalizedDistanceSquare < 1.0f)
                 {
-                    float powerFactor = 1.0f;
-                    for (int l = 0; l < localAvoidancePowerFactor; l++)
+                    if (agentTypes[neighbourAgentTypeIndex].softLocalAvoidance)
                     {
-                        powerFactor *= normalizedDistanceSquare;
+                        softAvoidanceVelocity += relative.normalized();
+                        hasSoftAvoidance = true;
                     }
-                    avoidanceVelocity += relative.normalized() / powerFactor;
-                    powerFactorSum += 1.0f / powerFactor;
+                    else
+                    {
+                        float powerFactor = 1.0f;
+                        for (int l = 0; l < localAvoidancePowerFactor; l++)
+                        {
+                            powerFactor *= normalizedDistanceSquare;
+                        }
+                        avoidanceVelocity += relative.normalized() / powerFactor;
+                        powerFactorSum += 1.0f / powerFactor;
+                    }
                 }
+            }
+
+            if (hasSoftAvoidance)
+            {
+                softAvoidanceVelocity.normalize();
+                softAvoidanceVelocity = softAvoidanceVelocity * (agents[i].pathVelocity.length() * 0.8f);
+                avoidanceVelocity += softAvoidanceVelocity;
             }
 
             agents[i].localAvoidanceVelocity = avoidanceVelocity;
