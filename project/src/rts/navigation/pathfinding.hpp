@@ -53,7 +53,12 @@ namespace NavigationSystemCode
             vector<int> &rightPortalsEdgeIndices,
             NavMesh &navMesh,
             vector<Float2> &simplifiedWaypoints);
-        Float2 GetPortalPosition(int index, int cornerIndex, vector<Float2> &waypoints, NavMesh &navMesh);
+        void GetPortalPosition(
+            int index,
+            int cornerIndex,
+            vector<Float2> &waypoints,
+            NavMesh &navMesh,
+            Float2 &position);
         float Orient2D(Float2 &a, Float2 &b, Float2 &c);
         void SimplifyPathCorners(
             vector<Float2> &waypoints,
