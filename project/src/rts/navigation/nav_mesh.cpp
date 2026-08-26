@@ -1137,9 +1137,9 @@ namespace NavigationSystemCode
         for (int i = 0; i < edgesAroundPoint.size(); i++)
         {
             int edgeIndex = edgesAroundPoint[i];
-            int hafEdgeIndex = allEdges[edgeIndex].index;
+            int halfEdgeIndex = allEdges[edgeIndex].index;
 
-            if (hullEdgeTriangulationEdgeToObstacleIndices[hafEdgeIndex] != -1 && edgesWalkability[hafEdgeIndex])
+            if (hullEdgeTriangulationEdgeToObstacleIndices[halfEdgeIndex] != -1 && edgesWalkability[halfEdgeIndex])
             {
                 int p = allEdges[edgeIndex].p;
                 int q = allEdges[edgeIndex].q;
