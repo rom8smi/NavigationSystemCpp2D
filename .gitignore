@@ -1,5 +1,6 @@
 *DS_Store
 .vscode/
+.godot/
 libgdexample.dylib
 /godot-cpp/bin/
 /project/godot_project/bin/
