@@ -11,6 +11,8 @@
 #include "random_dynamic_agents_spawner.hpp"
 #include "random_dynamic_obstacle.hpp"
 #include "random_dynamic_agent.hpp"
+#include "rts/navigation/obstacle.hpp"
+#include "rts/navigation/aabb.hpp"
 #include <vector>
 
 using namespace std;
@@ -29,7 +31,10 @@ namespace NavigationSystemCode
         vector<RandomDynamicAgentsSpawner> random_dynamic_agent_spawners;
         vector<RandomDynamicObstacle> random_dynamic_obstacles;
         vector<RandomDynamicAgent> random_dynamic_agents;
+        vector<Obstacle> manual_obstacles;
         bool random_dynamic_obstacles_visible;
+        bool has_manual_world_bounds;
+        Aabb manual_world_bounds;
 
         void create_scene_properties(int current_scene_index);
         void create_blocked_destination_scene();
@@ -44,6 +49,7 @@ namespace NavigationSystemCode
         void create_random_obstacles_scene();
         void create_random_rotated_obstacles_scene();
         void create_spiral_scene();
+        void create_file_load();
         void reset();
     };
 }

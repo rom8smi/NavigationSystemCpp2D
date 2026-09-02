@@ -477,6 +477,26 @@ namespace NavigationSystemCode
                 navigation_system);
         }
 
+        int manual_obstacles_count = navigation_tests_scene.manual_obstacles.size();
+        if (navigation_tests_scene.has_manual_world_bounds)
+        {
+            navigation_system.worldBounds = navigation_tests_scene.manual_world_bounds;
+
+            navigation_system.paddedWorldBounds = Aabb{
+                .minX = navigation_tests_scene.manual_world_bounds.minX + epsilon,
+                .maxX = navigation_tests_scene.manual_world_bounds.maxX - epsilon,
+                .minY = navigation_tests_scene.manual_world_bounds.minY + epsilon,
+                .maxY = navigation_tests_scene.manual_world_bounds.maxY - epsilon};
+        }
+
+        for (int i = 0; i < manual_obstacles_count; i++)
+        {
+            add_obstacle(
+                navigation_tests_scene.manual_obstacles[i],
+                navigation_tests_scene.manual_obstacles[i],
+                navigation_system);
+        }
+
         int chained_obstacle_spawners_count = navigation_tests_scene.chained_obstacle_spawners.size();
 
         for (int i = 0; i < chained_obstacle_spawners_count; i++)
@@ -575,6 +595,15 @@ namespace NavigationSystemCode
         navigation_system.unextended_obstacles.push_back(unextended_obstacle);
 
         return true;
+    }
+
+    void NavigationTestsSystem::add_obstacle(
+        Obstacle &obstacle,
+        Obstacle &unextended_obstacle,
+        NavigationSystem &navigation_system)
+    {
+        navigation_system.obstacles.push_back(obstacle);
+        navigation_system.unextended_obstacles.push_back(unextended_obstacle);
     }
 
     void NavigationTestsSystem::refresh_navmesh(

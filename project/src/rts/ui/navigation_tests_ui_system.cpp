@@ -2,6 +2,7 @@
 #include "ui_button_press_mode.hpp"
 #include "rts/godot_wrapper/godot_utils.hpp"
 #include "rts/math/rgba_presets.hpp"
+#include "rts/navigation/navigation_file_export.hpp"
 #include "rts/navigation/navigation_tests/navigation_tests_scene_indices.hpp"
 #include "rts/math/math_utils.hpp"
 
@@ -32,6 +33,8 @@ namespace NavigationSystemCode
         button_names.push_back("RandomObstacles");
         button_names.push_back("RandomRotatedObstacles");
         button_names.push_back("Spiral");
+        button_names.push_back("FileSave");
+        button_names.push_back("FileLoad");
 
         int blocked_destination_index = NavigationTestsSceneIndices::BLOCKED_DESTINATION;
         int blocked_destination_with_bridge_index = NavigationTestsSceneIndices::BLOCKED_DESTINATION_WITH_BRIDGE;
@@ -45,6 +48,8 @@ namespace NavigationSystemCode
         int random_obstacles_index = NavigationTestsSceneIndices::RANDOM_OBSTACLES;
         int random_rotated_obstacles_index = NavigationTestsSceneIndices::RANDOM_ROTATED_OBSTACLES;
         int spiral_index = NavigationTestsSceneIndices::SPIRAL;
+        int file_save_index = NavigationTestsSceneIndices::FILE_SAVE;
+        int file_load_index = NavigationTestsSceneIndices::FILE_LOAD;
 
         scene_indices.push_back(blocked_destination_index);
         scene_indices.push_back(blocked_destination_with_bridge_index);
@@ -58,6 +63,8 @@ namespace NavigationSystemCode
         scene_indices.push_back(random_obstacles_index);
         scene_indices.push_back(random_rotated_obstacles_index);
         scene_indices.push_back(spiral_index);
+        scene_indices.push_back(file_save_index);
+        scene_indices.push_back(file_load_index);
 
         number_of_buttons = scene_indices.size();
     }
@@ -92,7 +99,6 @@ namespace NavigationSystemCode
         NavigationSystem &navigation_system,
         GodotWorld &godot_world)
     {
-        // GodotUtils::print(godot_screen_system.window_width);
         if (MathUtils::abs(last_window_width - godot_screen_system.window_width) > 0.01f ||
             MathUtils::abs(last_window_height - godot_screen_system.window_height) > 0.01f)
         {
@@ -107,7 +113,15 @@ namespace NavigationSystemCode
 
         if (index != -1 && press_mode == UIButtonPressMode::PRESSED_DOWN)
         {
-            navigation_tests_system.set_scene_to_load(scene_indices[index], navigation_system, godot_world);
+            int scene_index = scene_indices[index];
+            if (scene_index == NavigationTestsSceneIndices::FILE_SAVE)
+            {
+                NavigationFileExport::save(navigation_system.obstacles, navigation_system.paddedWorldBounds);
+            }
+            else
+            {
+                navigation_tests_system.set_scene_to_load(scene_index, navigation_system, godot_world);
+            }
         }
     }
 

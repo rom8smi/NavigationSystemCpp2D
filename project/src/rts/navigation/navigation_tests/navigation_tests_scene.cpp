@@ -1,10 +1,15 @@
 #include "navigation_tests_scene.hpp"
 #include "navigation_tests_scene_indices.hpp"
+#include "rts/navigation/navigation_file_export.hpp"
+#include "rts/debug/debug.hpp"
 
 namespace NavigationSystemCode
 {
     void NavigationTestsScene::create_scene_properties(int current_scene_index)
     {
+        has_manual_world_bounds = false;
+        Debug::clear();
+
         if (current_scene_index == NavigationTestsSceneIndices::BLOCKED_DESTINATION)
         {
             create_blocked_destination_scene();
@@ -52,6 +57,10 @@ namespace NavigationSystemCode
         else if (current_scene_index == NavigationTestsSceneIndices::SPIRAL)
         {
             create_spiral_scene();
+        }
+        else if (current_scene_index == NavigationTestsSceneIndices::FILE_LOAD)
+        {
+            create_file_load();
         }
         else
         {
@@ -508,6 +517,12 @@ namespace NavigationSystemCode
                 .seed = 1});
     }
 
+    void NavigationTestsScene::create_file_load()
+    {
+        has_manual_world_bounds = true;
+        NavigationFileExport::load(manual_obstacles, manual_world_bounds);
+    }
+
     void NavigationTestsScene::reset()
     {
         manual_obstacle_spawners.clear();
@@ -520,5 +535,7 @@ namespace NavigationSystemCode
         random_dynamic_agent_spawners.clear();
         random_dynamic_obstacles.clear();
         random_dynamic_agents.clear();
+        manual_obstacles.clear();
+        has_manual_world_bounds = false;
     }
 }

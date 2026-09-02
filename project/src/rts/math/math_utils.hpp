@@ -13,6 +13,9 @@ namespace NavigationSystemCode
 		static constexpr const float FLOAT_MIN_VALUE = std::numeric_limits<float>::lowest();
 		static constexpr const float FLOAT_MAX_VALUE = (std::numeric_limits<float>::max)();
 		static constexpr const float FLOAT_EPSILON = (std::numeric_limits<float>::epsilon)();
+		static constexpr const double DOUBLE_MIN_VALUE = std::numeric_limits<double>::lowest();
+		static constexpr const double DOUBLE_MAX_VALUE = (std::numeric_limits<double>::max)();
+		static constexpr const double DOUBLE_EPSILON = (std::numeric_limits<double>::epsilon)();
 
 		static float interpolate(float x, float x0, float x1, float y0, float y1);
 		static float interpolate_clamped(float x, float x0, float x1, float y0, float y1);

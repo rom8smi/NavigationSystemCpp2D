@@ -11,8 +11,8 @@ using namespace std;
 namespace NavigationSystemCode
 {
     // Ported and based on https://github.com/kninnug/Constrainautor
-	struct Constrainautor
-	{
+    struct Constrainautor
+    {
         vector<int> vertMap;
         BoolSet flips;
         BoolSet consd;

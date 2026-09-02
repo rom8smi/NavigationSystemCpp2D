@@ -81,6 +81,10 @@ namespace NavigationSystemCode
             bool is_walkable,
             bool consider_intersection,
             NavigationSystem &navigation_system);
+        void add_obstacle(
+            Obstacle &obstacle,
+            Obstacle &unextended_obstacle,
+            NavigationSystem &navigation_system);
         void refresh_navmesh(NavigationSystem &navigation_system, GodotWorld &godot_world);
         void create_all_nav_mesh_drawers(NavigationSystem &navigation_system, GodotWorld &godot_world);
         void create_all_agents(NavigationSystem &navigation_system);

@@ -17,6 +17,8 @@ namespace NavigationSystemCode
         static const int RANDOM_OBSTACLES = 9;
         static const int RANDOM_ROTATED_OBSTACLES = 10;
         static const int SPIRAL = 11;
+        static const int FILE_SAVE = 12;
+        static const int FILE_LOAD = 13;
     };
 }
 

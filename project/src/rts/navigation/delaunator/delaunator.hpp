@@ -11,9 +11,9 @@ using namespace std;
 namespace NavigationSystemCode
 {
     // Ported and based on https://github.com/nol1fe/delaunator-sharp
-	struct Delaunator
-	{
-        float EPSILON;
+    struct Delaunator
+    {
+        double EPSILON;
         vector<int> EDGE_STACK;
 
         /// <summary>
@@ -39,13 +39,13 @@ namespace NavigationSystemCode
         vector<int> hullHash;
 
         vector<int> ids;
-        vector<float> dists;
+        vector<double> dists;
 
-        float cx_final;
-        float cy_final;
+        double cx_final;
+        double cy_final;
 
         int trianglesLen;
-        vector<float> coords;
+        vector<double> coords;
         int hullStart;
         int hullSize;
 
@@ -53,15 +53,15 @@ namespace NavigationSystemCode
         void Create(vector<Float2> &p_points);
         void ClearTemporaryLists();
         int Legalize(int a);
-        static bool InCircle(float ax, float ay, float bx, float by, float cx, float cy, float px, float py);
+        static bool InCircle(double ax, double ay, double bx, double by, double cx, double cy, double px, double py);
         int AddTriangle(int i0, int i1, int i2, int a, int b, int c);
         void Link(int a, int b);
-        int HashKey(float x, float y);
-        static float PseudoAngle(float dx, float dy);
-        static bool Orient(float px, float py, float qx, float qy, float rx, float ry);
-        static float Circumradius(float ax, float ay, float bx, float by, float cx, float cy);
-        static Float2 Circumcenter(float ax, float ay, float bx, float by, float cx, float cy);
-        static float Dist(float ax, float ay, float bx, float by);
+        int HashKey(double x, double y);
+        static double PseudoAngle(double dx, double dy);
+        static bool Orient(double px, double py, double qx, double qy, double rx, double ry);
+        static double Circumradius(double ax, double ay, double bx, double by, double cx, double cy);
+        static Float2 Circumcenter(double ax, double ay, double bx, double by, double cx, double cy);
+        static double Dist(double ax, double ay, double bx, double by);
         vector<DelaunatorTriangle> GetTriangles();
         vector<DelaunatorEdge> GetEdges();
         vector<int> PointsOfTriangle(int t);

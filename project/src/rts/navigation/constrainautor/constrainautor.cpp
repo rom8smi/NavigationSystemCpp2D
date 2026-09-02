@@ -135,18 +135,18 @@ namespace NavigationSystemCode
             }
 
             int adj = del.halfedges[edg];
-            int bot = PrevEdge(edg);
-            int top = PrevEdge(adj);
-            int rgt = NextEdge(adj);
-
-            Debug::index_assert(edg, del.triangles.size(), "bbb7");
-            Debug::index_assert(adj, del.triangles.size(), "bbb8");
+            Debug::index_assert(adj, del.triangles.size(), "bbb7 ");
 
             if (adj < 0)
             {
                 return;
             }
 
+            int bot = PrevEdge(edg);
+            int top = PrevEdge(adj);
+            int rgt = NextEdge(adj);
+
+            Debug::index_assert(edg, del.triangles.size(), "bbb8");
             Debug::index_assert(bot, del.triangles.size(), "bbb9");
 
             if (bot < 0)

@@ -70,15 +70,15 @@ namespace NavigationSystemCode
 
         ids.resize(n);
 
-        float minX = MathUtils::FLOAT_MAX_VALUE;
-        float minY = MathUtils::FLOAT_MAX_VALUE;
-        float maxX = -MathUtils::FLOAT_MAX_VALUE;
-        float maxY = -MathUtils::FLOAT_MAX_VALUE;
+        double minX = MathUtils::DOUBLE_MAX_VALUE;
+        double minY = MathUtils::DOUBLE_MAX_VALUE;
+        double maxX = -MathUtils::DOUBLE_MAX_VALUE;
+        double maxY = -MathUtils::DOUBLE_MAX_VALUE;
 
         for (int i = 0; i < n; i++)
         {
-            float x = coords[2 * i];
-            float y = coords[2 * i + 1];
+            double x = coords[2 * i];
+            double y = coords[2 * i + 1];
             if (x < minX)
                 minX = x;
             if (y < minY)
@@ -90,10 +90,10 @@ namespace NavigationSystemCode
             ids[i] = i;
         }
 
-        float cx = (minX + maxX) / 2;
-        float cy = (minY + maxY) / 2;
+        double cx = (minX + maxX) / 2;
+        double cy = (minY + maxY) / 2;
 
-        float minDist = MathUtils::FLOAT_MAX_VALUE;
+        double minDist = MathUtils::DOUBLE_MAX_VALUE;
         int i0 = 0;
         int i1 = 0;
         int i2 = 0;
@@ -101,24 +101,24 @@ namespace NavigationSystemCode
         // pick a seed point close to the center
         for (int i = 0; i < n; i++)
         {
-            float d = Dist(cx, cy, coords[2 * i], coords[2 * i + 1]);
+            double d = Dist(cx, cy, coords[2 * i], coords[2 * i + 1]);
             if (d < minDist)
             {
                 i0 = i;
                 minDist = d;
             }
         }
-        float i0x = coords[2 * i0];
-        float i0y = coords[2 * i0 + 1];
+        double i0x = coords[2 * i0];
+        double i0y = coords[2 * i0 + 1];
 
-        minDist = MathUtils::FLOAT_MAX_VALUE;
+        minDist = MathUtils::DOUBLE_MAX_VALUE;
 
         // find the point closest to the seed
         for (int i = 0; i < n; i++)
         {
             if (i == i0)
                 continue;
-            float d = Dist(i0x, i0y, coords[2 * i], coords[2 * i + 1]);
+            double d = Dist(i0x, i0y, coords[2 * i], coords[2 * i + 1]);
             if (d < minDist && d > 0)
             {
                 i1 = i;
@@ -126,27 +126,27 @@ namespace NavigationSystemCode
             }
         }
 
-        float i1x = coords[2 * i1];
-        float i1y = coords[2 * i1 + 1];
+        double i1x = coords[2 * i1];
+        double i1y = coords[2 * i1 + 1];
 
-        float minRadius = MathUtils::FLOAT_MAX_VALUE;
+        double minRadius = MathUtils::DOUBLE_MAX_VALUE;
 
         // find the third point which forms the smallest circumcircle with the first two
         for (int i = 0; i < n; i++)
         {
             if (i == i0 || i == i1)
                 continue;
-            float r = Circumradius(i0x, i0y, i1x, i1y, coords[2 * i], coords[2 * i + 1]);
+            double r = Circumradius(i0x, i0y, i1x, i1y, coords[2 * i], coords[2 * i + 1]);
             if (r < minRadius)
             {
                 i2 = i;
                 minRadius = r;
             }
         }
-        float i2x = coords[2 * i2];
-        float i2y = coords[2 * i2 + 1];
+        double i2x = coords[2 * i2];
+        double i2y = coords[2 * i2 + 1];
 
-        if (minRadius == MathUtils::FLOAT_MAX_VALUE)
+        if (minRadius == MathUtils::DOUBLE_MAX_VALUE)
         {
             GodotUtils::print("No Delaunay triangulation exists for this input.");
             return;
@@ -155,8 +155,8 @@ namespace NavigationSystemCode
         if (Orient(i0x, i0y, i1x, i1y, i2x, i2y))
         {
             int i = i1;
-            float x = i1x;
-            float y = i1y;
+            double x = i1x;
+            double y = i1y;
             i1 = i2;
             i1x = i2x;
             i1y = i2y;
@@ -198,14 +198,14 @@ namespace NavigationSystemCode
         trianglesLen = 0;
         AddTriangle(i0, i1, i2, -1, -1, -1);
 
-        float xp = 0;
-        float yp = 0;
+        double xp = 0;
+        double yp = 0;
 
         for (int k = 0; k < n; k++)
         {
             int i = ids[k];
-            float x = coords[2 * i];
-            float y = coords[2 * i + 1];
+            double x = coords[2 * i];
+            double y = coords[2 * i + 1];
 
             // skip near-duplicate points
             if (k > 0 && abs(x - xp) <= EPSILON && abs(y - yp) <= EPSILON)
@@ -408,18 +408,18 @@ namespace NavigationSystemCode
         return ar;
     }
 
-    bool Delaunator::InCircle(float ax, float ay, float bx, float by, float cx, float cy, float px, float py)
+    bool Delaunator::InCircle(double ax, double ay, double bx, double by, double cx, double cy, double px, double py)
     {
-        float dx = ax - px;
-        float dy = ay - py;
-        float ex = bx - px;
-        float ey = by - py;
-        float fx = cx - px;
-        float fy = cy - py;
+        double dx = ax - px;
+        double dy = ay - py;
+        double ex = bx - px;
+        double ey = by - py;
+        double fx = cx - px;
+        double fy = cy - py;
 
-        float ap = dx * dx + dy * dy;
-        float bp = ex * ex + ey * ey;
-        float cp = fx * fx + fy * fy;
+        double ap = dx * dx + dy * dy;
+        double bp = ex * ex + ey * ey;
+        double cp = fx * fx + fy * fy;
 
         return dx * (ey * cp - bp * fy) -
                    dy * (ex * cp - bp * fx) +
@@ -450,55 +450,55 @@ namespace NavigationSystemCode
             halfedges[b] = a;
     }
 
-    int Delaunator::HashKey(float x, float y)
+    int Delaunator::HashKey(double x, double y)
     {
         return (int)(MathUtils::floor(PseudoAngle(x - cx_final, y - cy_final) * hashSize) % hashSize);
     }
 
-    float Delaunator::PseudoAngle(float dx, float dy)
+    double Delaunator::PseudoAngle(double dx, double dy)
     {
-        float p = dx / (abs(dx) + abs(dy));
+        double p = dx / (abs(dx) + abs(dy));
         return (dy > 0 ? 3 - p : 1 + p) / 4; // [0..1]
     }
 
-    bool Delaunator::Orient(float px, float py, float qx, float qy, float rx, float ry)
+    bool Delaunator::Orient(double px, double py, double qx, double qy, double rx, double ry)
     {
         return (qy - py) * (rx - qx) - (qx - px) * (ry - qy) < 0;
     }
 
-    float Delaunator::Circumradius(float ax, float ay, float bx, float by, float cx, float cy)
+    double Delaunator::Circumradius(double ax, double ay, double bx, double by, double cx, double cy)
     {
-        float dx = bx - ax;
-        float dy = by - ay;
-        float ex = cx - ax;
-        float ey = cy - ay;
-        float bl = dx * dx + dy * dy;
-        float cl = ex * ex + ey * ey;
-        float d = 0.5f / (dx * ey - dy * ex);
-        float x = (ey * bl - dy * cl) * d;
-        float y = (dx * cl - ex * bl) * d;
+        double dx = bx - ax;
+        double dy = by - ay;
+        double ex = cx - ax;
+        double ey = cy - ay;
+        double bl = dx * dx + dy * dy;
+        double cl = ex * ex + ey * ey;
+        double d = 0.5f / (dx * ey - dy * ex);
+        double x = (ey * bl - dy * cl) * d;
+        double y = (dx * cl - ex * bl) * d;
         return x * x + y * y;
     }
 
-    Float2 Delaunator::Circumcenter(float ax, float ay, float bx, float by, float cx, float cy)
+    Float2 Delaunator::Circumcenter(double ax, double ay, double bx, double by, double cx, double cy)
     {
-        float dx = bx - ax;
-        float dy = by - ay;
-        float ex = cx - ax;
-        float ey = cy - ay;
-        float bl = dx * dx + dy * dy;
-        float cl = ex * ex + ey * ey;
-        float d = 0.5f / (dx * ey - dy * ex);
-        float x = ax + (ey * bl - dy * cl) * d;
-        float y = ay + (dx * cl - ex * bl) * d;
+        double dx = bx - ax;
+        double dy = by - ay;
+        double ex = cx - ax;
+        double ey = cy - ay;
+        double bl = dx * dx + dy * dy;
+        double cl = ex * ex + ey * ey;
+        double d = 0.5f / (dx * ey - dy * ex);
+        double x = ax + (ey * bl - dy * cl) * d;
+        double y = ay + (dx * cl - ex * bl) * d;
 
         return Float2(x, y);
     }
 
-    float Delaunator::Dist(float ax, float ay, float bx, float by)
+    double Delaunator::Dist(double ax, double ay, double bx, double by)
     {
-        float dx = ax - bx;
-        float dy = ay - by;
+        double dx = ax - bx;
+        double dy = ay - by;
         return dx * dx + dy * dy;
     }
 
