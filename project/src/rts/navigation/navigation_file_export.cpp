@@ -1,6 +1,8 @@
 #include "navigation_file_export.hpp"
 #include <fstream>
 #include <cstdint>
+#include <iomanip>
+#include <limits>
 
 namespace NavigationSystemCode
 {
