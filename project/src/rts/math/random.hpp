@@ -12,9 +12,9 @@ namespace NavigationSystemCode
 		Random();
 		Random(unsigned long p_seed);
 		int next_int();
-        int next_int(int min, int max);
-        float next_float();
-        float next_float(float min, float max);
+		int next_int(int min, int max);
+		float next_float();
+		float next_float(float min, float max);
 		unsigned long get_seed();
 		void set_seed(unsigned long p_seed);
 	};
