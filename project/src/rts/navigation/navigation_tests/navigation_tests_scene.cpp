@@ -162,7 +162,8 @@ namespace NavigationSystemCode
             .number_to_spawn = 300,
             .obstacle_size = 0.3f,
             .chain_direction = Float2(0.0f, -1.0f),
-            .is_visible = false});
+            .is_visible = false,
+            .use_additional_offset = true});
     }
 
     void NavigationTestsScene::create_circles_scene()

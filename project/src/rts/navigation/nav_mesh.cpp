@@ -461,7 +461,10 @@ namespace NavigationSystemCode
         vector<vector<vector<int>>> intersectionCornerIndicesByCornersNeighbours;
 
         float maxRadius = 0.0f;
-        float epsilon = 0.001f;
+        float intersection_search_epsilon = 0.001f;
+        float intersection_parallel_epsilon = 0.00001f;
+        float intersection_endpoint_epsilon = 0.00001f;
+        float intersection_collinearity_epsilon = 0.00001f;
 
         int obstaclesCount = obstacles.size();
 
@@ -540,7 +543,7 @@ namespace NavigationSystemCode
             Float2 startPointI = segmentStarts[i];
             Float2 endPointI = segmentEnds[i];
 
-            float searchDistance = maxRadius + segmentRadii[i] + 6.0f * epsilon;
+            float searchDistance = maxRadius + segmentRadii[i] + 6.0f * intersection_search_epsilon;
 
             Float2 queryPoint = segmentCenters[i];
             neighbours.clear();
@@ -563,12 +566,18 @@ namespace NavigationSystemCode
                         Float2 startPointNeighbour = segmentStarts[neighbour];
                         Float2 endPointNeighbour = segmentEnds[neighbour];
 
-                        LineSegmentsIntersectionResult result = VectorUtils::LineSegmentsIntersection(startPointI, endPointI, startPointNeighbour, endPointNeighbour, epsilon);
+                        LineSegmentsIntersectionResult result = VectorUtils::LineSegmentsIntersection(
+                            startPointI,
+                            endPointI,
+                            startPointNeighbour,
+                            endPointNeighbour,
+                            intersection_parallel_epsilon,
+                            intersection_endpoint_epsilon);
                         if (result.intersects &&
-                            !VectorUtils::PointOnLine2D(startPointNeighbour, startPointI, endPointI, epsilon) &&
-                            !VectorUtils::PointOnLine2D(endPointNeighbour, startPointI, endPointI, epsilon) &&
-                            !VectorUtils::PointOnLine2D(startPointI, startPointNeighbour, endPointNeighbour, epsilon) &&
-                            !VectorUtils::PointOnLine2D(endPointI, startPointNeighbour, endPointNeighbour, epsilon))
+                            !VectorUtils::PointOnLine2D(startPointNeighbour, startPointI, endPointI, intersection_collinearity_epsilon) &&
+                            !VectorUtils::PointOnLine2D(endPointNeighbour, startPointI, endPointI, intersection_collinearity_epsilon) &&
+                            !VectorUtils::PointOnLine2D(startPointI, startPointNeighbour, endPointNeighbour, intersection_collinearity_epsilon) &&
+                            !VectorUtils::PointOnLine2D(endPointI, startPointNeighbour, endPointNeighbour, intersection_collinearity_epsilon))
                         {
                             int iSegmentCornerStartIndex = segmentCornerStartInObstacleIndices[i];
                             int neighbourSegmentCornerStartIndex = segmentCornerStartInObstacleIndices[neighbour];

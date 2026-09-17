@@ -408,10 +408,25 @@ namespace NavigationSystemCode
                 float obstacle_separation = obstacle_size - margin;
                 Float3 scale = Float3(obstacle_size, obstacle_size, obstacle_size);
 
+                float additional_offset_epsilon = 0.01f;
+                Float2 chain_direction = navigation_tests_scene.chained_obstacle_spawners[i].chain_direction.normalized();
+                Float2 chain_direction_perpendicular_scaled = VectorUtils::PerpendicularCounterClockwise(chain_direction) * additional_offset_epsilon;
+
                 for (int j = 0; j < navigation_tests_scene.chained_obstacle_spawners[i].number_to_spawn; j++)
                 {
                     Float2 center = navigation_tests_scene.chained_obstacle_spawners[i].start +
-                                    navigation_tests_scene.chained_obstacle_spawners[i].chain_direction * j * obstacle_separation;
+                                    chain_direction * j * obstacle_separation;
+
+                    if (navigation_tests_scene.chained_obstacle_spawners[i].use_additional_offset)
+                    {
+                        Float2 additional_offset = chain_direction_perpendicular_scaled;
+                        if (j % 2 == 0)
+                        {
+                            additional_offset = -additional_offset;
+                        }
+
+                        center += additional_offset;
+                    }
 
                     add_visible_obstacle(center,
                                          0.0f,
@@ -506,10 +521,25 @@ namespace NavigationSystemCode
             float obstacle_separation = obstacle_size - margin;
             Float3 scale = Float3(obstacle_size, obstacle_size, obstacle_size);
 
+            float additional_offset_epsilon = 0.01f;
+            Float2 chain_direction = navigation_tests_scene.chained_obstacle_spawners[i].chain_direction.normalized();
+            Float2 chain_direction_perpendicular_scaled = VectorUtils::PerpendicularCounterClockwise(chain_direction) * additional_offset_epsilon;
+
             for (int j = 0; j < navigation_tests_scene.chained_obstacle_spawners[i].number_to_spawn; j++)
             {
                 Float2 center = navigation_tests_scene.chained_obstacle_spawners[i].start +
-                                navigation_tests_scene.chained_obstacle_spawners[i].chain_direction * j * obstacle_separation;
+                                chain_direction * j * obstacle_separation;
+
+                if (navigation_tests_scene.chained_obstacle_spawners[i].use_additional_offset)
+                {
+                    Float2 additional_offset = chain_direction_perpendicular_scaled;
+                    if (j % 2 == 0)
+                    {
+                        additional_offset = -additional_offset;
+                    }
+
+                    center += additional_offset;
+                }
 
                 try_add_obstacle(
                     center,
@@ -610,7 +640,7 @@ namespace NavigationSystemCode
         NavigationSystem &navigation_system,
         GodotWorld &godot_world)
     {
-        navigation_system.navMesh.Create(navigation_system.obstacles, navigation_system.paddedWorldBounds);
+        navigation_system.create_nav_mesh(navigation_system.obstacles, navigation_system.paddedWorldBounds);
         navigation_system.pathfinding.CreateNodes(navigation_system.navMesh);
 
         create_all_nav_mesh_drawers(navigation_system, godot_world);

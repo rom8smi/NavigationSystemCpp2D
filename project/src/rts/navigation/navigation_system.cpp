@@ -81,6 +81,23 @@ namespace NavigationSystemCode
         {
             debug_agents_mover.ready();
         }
+
+        if (use_debug_nav_mesh)
+        {
+            debug_nav_mesh.ready();
+        }
+    }
+
+    void NavigationSystem::create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds)
+    {
+        if (use_debug_nav_mesh)
+        {
+            debug_nav_mesh.Create(navMesh, p_obstacles, p_bounds);
+        }
+        else
+        {
+            navMesh.Create(p_obstacles, p_bounds);
+        }
     }
 
     void NavigationSystem::process(

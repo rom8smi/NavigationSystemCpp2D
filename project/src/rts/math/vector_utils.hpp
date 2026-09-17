@@ -15,6 +15,13 @@ namespace NavigationSystemCode
     {
         static LineSegmentsIntersectionResult LineSegmentsIntersection(Float2 &a1, Float2 &a2, Float2 &b1, Float2 &b2);
         static LineSegmentsIntersectionResult LineSegmentsIntersection(Float2 &a1, Float2 &a2, Float2 &b1, Float2 &b2, float epsilon);
+        static LineSegmentsIntersectionResult LineSegmentsIntersection(
+            Float2 &a1,
+            Float2 &a2,
+            Float2 &b1,
+            Float2 &b2,
+            float parallel_epsilon,
+            float endpoint_epsilon);
         static bool AreLineSegmentsIntersecting(Float2 &a1, Float2 &a2, Float2 &b1, Float2 &b2);
         static Float2 find_nearest_point_on_line(Float2 &origin, Float2 &direction, Float2 &point);
         static Float2 FindNearestPointOnLineSegment(Float2 &start, Float2 &end, Float2 &point);

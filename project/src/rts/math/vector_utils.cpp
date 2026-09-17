@@ -38,11 +38,22 @@ namespace NavigationSystemCode
 
     LineSegmentsIntersectionResult VectorUtils::LineSegmentsIntersection(Float2 &a1, Float2 &a2, Float2 &b1, Float2 &b2, float epsilon)
     {
+        return LineSegmentsIntersection(a1, a2, b1, b2, epsilon, epsilon);
+    }
+
+    LineSegmentsIntersectionResult VectorUtils::LineSegmentsIntersection(
+        Float2 &a1,
+        Float2 &a2,
+        Float2 &b1,
+        Float2 &b2,
+        float parallel_epsilon,
+        float endpoint_epsilon)
+    {
         Float2 intersection = Float2(0.0f, 0.0f);
 
         float d = (a2.x - a1.x) * (b2.y - b1.y) - (a2.y - a1.y) * (b2.x - b1.x);
 
-        if (d < epsilon && d > -epsilon)
+        if (d < parallel_epsilon && d > -parallel_epsilon)
         {
             return LineSegmentsIntersectionResult{
                 .intersects = false,
@@ -52,7 +63,8 @@ namespace NavigationSystemCode
         float u = ((b1.x - a1.x) * (b2.y - b1.y) - (b1.y - a1.y) * (b2.x - b1.x)) / d;
         float v = ((b1.x - a1.x) * (a2.y - a1.y) - (b1.y - a1.y) * (a2.x - a1.x)) / d;
 
-        if (u < epsilon || u > 1.0f - epsilon || v < epsilon || v > 1.0f - epsilon)
+        if (u < endpoint_epsilon || u > 1.0f - endpoint_epsilon ||
+            v < endpoint_epsilon || v > 1.0f - endpoint_epsilon)
         {
             return LineSegmentsIntersectionResult{
                 .intersects = false,

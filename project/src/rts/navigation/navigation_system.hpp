@@ -4,6 +4,7 @@
 #include "pathfinding.hpp"
 #include "agents_mover.hpp"
 #include "agent_type.hpp"
+#include "debug_nav_mesh.hpp"
 #include "rts/debug/debug_agents_mover.hpp"
 #include "rts/godot_wrapper/godot_world.hpp"
 
@@ -16,10 +17,12 @@ namespace NavigationSystemCode
     struct NavigationSystem
     {
         NavMesh navMesh;
+        DebugNavMesh debug_nav_mesh;
         Pathfinding pathfinding;
         AgentsMover agentsMover;
         DebugAgentsMover debug_agents_mover;
         bool use_debug_agents_mover = false;
+        bool use_debug_nav_mesh = false;
 
         vector<Agent> agents;
         vector<Float2> agentPositions;
@@ -36,6 +39,7 @@ namespace NavigationSystemCode
         float largestAgentRadius;
 
         void ready(GodotWorld &godot_world);
+        void create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds);
         void process(
             float delta);
         void AddAgent(Float2 &position, int agentTypeIndex, int unitIndex, float speed);

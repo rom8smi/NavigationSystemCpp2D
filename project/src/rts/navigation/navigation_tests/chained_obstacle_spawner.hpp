@@ -14,6 +14,7 @@ namespace NavigationSystemCode
         float obstacle_size;
         Float2 chain_direction;
         bool is_visible;
+        bool use_additional_offset;
     };
 }
 
