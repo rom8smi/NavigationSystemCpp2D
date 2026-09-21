@@ -15,11 +15,10 @@ namespace NavigationSystemCode
         random.seed = 8;
     }
 
-    void NavMesh::Create(vector<Obstacle> &obstacles, Aabb &bounds)
+    void NavMesh::Create(vector<Obstacle> &obstacles, Aabb &bounds, const string &reason)
     {
-        // const auto t1 = std::chrono::high_resolution_clock::now();
         worldBounds = bounds;
-        SubdivideAndBuildConstrainedTriangulation(obstacles);
+        SubdivideAndBuildConstrainedTriangulation(obstacles, reason);
 
         allTriangles = delaunator.GetTriangles();
         allEdges = delaunator.GetEdges();
@@ -59,12 +58,6 @@ namespace NavigationSystemCode
         CalculateSizeOfSmallestHullEdge();
         CreateTriangulationSearch();
         CreateVisitedTriangles();
-        // const auto t2 = std::chrono::high_resolution_clock::now();
-
-        // const double dt1 = std::chrono::duration<double, std::milli>(t2 - t1).count();
-
-        // GodotUtils::print(to_string(dt1));
-        // Times are about 20 ms for default scene.
     }
 
     vector<Float2> NavMesh::GetSubdividedWorldBoundEdges(vector<Obstacle> &obstacles)
@@ -144,7 +137,7 @@ namespace NavigationSystemCode
         return worldBoundCorners;
     }
 
-    void NavMesh::SubdivideAndBuildConstrainedTriangulation(vector<Obstacle> &obstacles)
+    void NavMesh::SubdivideAndBuildConstrainedTriangulation(vector<Obstacle> &obstacles, const string &reason)
     {
         vector<Float2> worldBoundCorners = GetSubdividedWorldBoundEdges(obstacles);
         totalNumberOfWorldBoundCorners = worldBoundCorners.size();
@@ -175,7 +168,7 @@ namespace NavigationSystemCode
         delaunator.Create(allPoints);
         delaunator.ClearTemporaryLists();
 
-        constrainautor.Create(delaunator, constraintEdges);
+        constrainautor.Create(delaunator, constraintEdges, reason);
         constrainautor.ClearTemporaryLists();
     }
 

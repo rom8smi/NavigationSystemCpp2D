@@ -76,20 +76,35 @@ namespace NavigationSystemCode
 
 	int MathUtils::abs(int i)
 	{
-		if (i < 0)
-		{
-			return -i;
-		}
-		return i;
+		return std::abs(i);
 	}
 
 	float MathUtils::abs(float f)
 	{
-		if (f < 0.0f)
+		return std::abs(f);
+	}
+
+	double MathUtils::abs(double d)
+	{
+		return std::abs(d);
+	}
+
+	int MathUtils::min(int a, int b)
+	{
+		if (a < b)
 		{
-			return -f;
+			return a;
 		}
-		return f;
+		return b;
+	}
+
+	int MathUtils::max(int a, int b)
+	{
+		if (a > b)
+		{
+			return a;
+		}
+		return b;
 	}
 
 	float MathUtils::min(float a, float b)
@@ -110,7 +125,7 @@ namespace NavigationSystemCode
 		return b;
 	}
 
-	int MathUtils::min(int a, int b)
+	double MathUtils::min(double a, double b)
 	{
 		if (a < b)
 		{
@@ -119,7 +134,7 @@ namespace NavigationSystemCode
 		return b;
 	}
 
-	int MathUtils::max(int a, int b)
+	double MathUtils::max(double a, double b)
 	{
 		if (a > b)
 		{

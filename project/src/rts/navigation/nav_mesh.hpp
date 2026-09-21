@@ -54,9 +54,9 @@ namespace NavigationSystemCode
         vector<bool> visitedTriangles;
 
         NavMesh();
-        void Create(vector<Obstacle> &obstacles, Aabb &bounds);
+        void Create(vector<Obstacle> &obstacles, Aabb &bounds, const string &reason);
         vector<Float2> GetSubdividedWorldBoundEdges(vector<Obstacle> &obstacles);
-        void SubdivideAndBuildConstrainedTriangulation(vector<Obstacle> &obstacles);
+        void SubdivideAndBuildConstrainedTriangulation(vector<Obstacle> &obstacles, const string &reason);
         void FindWalkableTriangles(vector<Obstacle> &obstacles);
         void FindWalkableEdges(vector<Obstacle> &obstacles);
         void CalculateSizeOfSmallestHullEdge();

@@ -8,12 +8,13 @@
 
 namespace NavigationSystemCode
 {
-    void Constrainautor::Create(Delaunator &del, vector<ConstraintEdge> &edges)
+    void Constrainautor::Create(Delaunator &del, vector<ConstraintEdge> &edges, const string &reason)
     {
         int coordsCount = del.coords.size();
         int numPoints = coordsCount / 2;
         int numEdges = del.triangles.size();
         loopMax = coordsCount * 3;
+        debugInCircleToleranceErrors = false;
 
         // Map every vertex id to the right-most edge that points to that vertex
         vertMap.resize(numPoints);
@@ -26,6 +27,14 @@ namespace NavigationSystemCode
         flips.Create(numEdges);
         // Keep track of constrained edges
         consd.Create(numEdges);
+        dirtyEdges.clear();
+        dirtyEdgeQueued.resize(numEdges);
+        inCircleComparisonMismatchCount = 0;
+        inCircleComparisonLoggedCount = 0;
+        for (int i = 0; i < numEdges; i++)
+        {
+            dirtyEdgeQueued[i] = false;
+        }
 
         for (int e = 0; e < numEdges; e++)
         {
@@ -36,17 +45,24 @@ namespace NavigationSystemCode
             }
         }
 
-        ConstrainAll(edges, del);
+        ConstrainAll(edges, del, reason);
     }
 
     void Constrainautor::ClearTemporaryLists()
     {
+        if (inCircleComparisonMismatchCount > 0)
+        {
+            Debug::log("Constrainautor InCircle comparison mismatches " + to_string(inCircleComparisonMismatchCount));
+        }
+
         vertMap.clear();
+        dirtyEdges.clear();
+        dirtyEdgeQueued.clear();
         flips.Clear();
         consd.Clear();
     }
 
-    void Constrainautor::ConstrainOne(int segP1, int segP2, Delaunator &del)
+    void Constrainautor::ConstrainOne(int segP1, int segP2, Delaunator &del, const string &reason)
     {
         Debug::index_assert(segP1, vertMap.size(), "bbb2");
         int start = vertMap[segP1];
@@ -59,7 +75,7 @@ namespace NavigationSystemCode
             iLoop++;
             if (iLoop > loopMax)
             {
-                // Debug::log("aaa1");
+                Debug::log("Constrainautor 1 loopMax " + to_string(loopMax));
                 return;
             }
             if (edg == -1)
@@ -124,7 +140,7 @@ namespace NavigationSystemCode
             // }
             if (iLoop > loopMax)
             {
-                // Debug::log("aaa2");
+                Debug::log("Constrainautor 2 loopMax " + to_string(loopMax));
                 return;
             }
 
@@ -135,7 +151,7 @@ namespace NavigationSystemCode
             }
 
             int adj = del.halfedges[edg];
-            Debug::index_assert(adj, del.triangles.size(), "bbb7 ");
+            Debug::index_assert(adj, del.triangles.size(), "bbb7 " + reason);
 
             if (adj < 0)
             {
@@ -256,18 +272,17 @@ namespace NavigationSystemCode
         Delaunify(false, del);
     }
 
-    void Constrainautor::ConstrainAll(vector<ConstraintEdge> &edges, Delaunator &del)
+    void Constrainautor::ConstrainAll(vector<ConstraintEdge> &edges, Delaunator &del, const string &reason)
     {
         for (int i = 0; i < edges.size(); i++)
         {
             Debug::index_assert(i, edges.size(), "bbb1");
-            ConstrainOne(edges[i].p, edges[i].q, del);
+            ConstrainOne(edges[i].p, edges[i].q, del, reason);
         }
     }
 
     void Constrainautor::Delaunify(bool deep, Delaunator &del)
     {
-        int len = del.halfedges.size();
         int flipped;
         int iLoop = 0;
 
@@ -276,13 +291,32 @@ namespace NavigationSystemCode
             iLoop++;
             if (iLoop > loopMax)
             {
-                // Debug::log("aaa3");
+                Debug::log("Constrainautor 3 loopMax " + to_string(loopMax));
                 return;
             }
 
             flipped = 0;
-            for (int edg = 0; edg < len; edg++)
+            int dirtyEdgeLoopMax = del.halfedges.size() * 4;
+            int edgeChecks = 0;
+            while (dirtyEdges.size() > 0)
             {
+                edgeChecks++;
+                if (edgeChecks > dirtyEdgeLoopMax)
+                {
+                    Debug::log("Constrainautor dirty edge loopMax " + to_string(dirtyEdgeLoopMax));
+                    dirtyEdges.clear();
+                    for (int i = 0; i < dirtyEdgeQueued.size(); i++)
+                    {
+                        dirtyEdgeQueued[i] = false;
+                    }
+                    return;
+                }
+
+                int dirtyEdgeIndex = dirtyEdges.size() - 1;
+                int edg = dirtyEdges[dirtyEdgeIndex];
+                dirtyEdges.erase(dirtyEdges.begin() + dirtyEdgeIndex);
+                dirtyEdgeQueued[edg] = false;
+
                 if (consd.Has(edg))
                 {
                     continue;
@@ -303,7 +337,18 @@ namespace NavigationSystemCode
                     flipped++;
                 }
             }
-        } while (deep && flipped > 0);
+        } while (deep && flipped > 0 && dirtyEdges.size() > 0);
+    }
+
+    void Constrainautor::EnqueueDirtyEdge(int edg, Delaunator &del)
+    {
+        if (edg < 0 || edg >= del.halfedges.size() || dirtyEdgeQueued[edg])
+        {
+            return;
+        }
+
+        dirtyEdgeQueued[edg] = true;
+        dirtyEdges.push_back(edg);
     }
 
     int Constrainautor::Protect(int edg, Delaunator &del)
@@ -405,6 +450,13 @@ namespace NavigationSystemCode
         flips.Add(top);
         consd.Remove(top);
 
+        EnqueueDirtyEdge(bot, del);
+        EnqueueDirtyEdge(top, del);
+        EnqueueDirtyEdge(lft, del);
+        EnqueueDirtyEdge(rgt, del);
+        EnqueueDirtyEdge(adjTop, del);
+        EnqueueDirtyEdge(adjBot, del);
+
         UpdateVert(edg, del);
         UpdateVert(lft, del);
         UpdateVert(adj, del);
@@ -502,11 +554,47 @@ namespace NavigationSystemCode
         Debug::index_assert(px * 2, del.coords.size(), "bbb57");
         Debug::index_assert(px * 2 + 1, del.coords.size(), "bbb58");
 
-        return InCircle(
-                   del.coords[p1 * 2], del.coords[p1 * 2 + 1],
-                   del.coords[p2 * 2], del.coords[p2 * 2 + 1],
-                   del.coords[p3 * 2], del.coords[p3 * 2 + 1],
-                   del.coords[px * 2], del.coords[px * 2 + 1]) < 0.0f;
+        double ax = del.coords[p1 * 2];
+        double ay = del.coords[p1 * 2 + 1];
+        double bx = del.coords[p2 * 2];
+        double by = del.coords[p2 * 2 + 1];
+        double cx = del.coords[p3 * 2];
+        double cy = del.coords[p3 * 2 + 1];
+        double dx = del.coords[px * 2];
+        double dy = del.coords[px * 2 + 1];
+
+        double scale = MathUtils::abs(ax - dx);
+        scale = MathUtils::max(scale, MathUtils::abs(ay - dy));
+        scale = MathUtils::max(scale, MathUtils::abs(bx - dx));
+        scale = MathUtils::max(scale, MathUtils::abs(by - dy));
+        scale = MathUtils::max(scale, MathUtils::abs(cx - dx));
+        scale = MathUtils::max(scale, MathUtils::abs(cy - dy));
+
+        double determinant = InCircle(ax, ay, bx, by, cx, cy, dx, dy);
+        double tolerance = 64.0 * MathUtils::DOUBLE_EPSILON * scale * scale * scale * scale;
+        bool result = determinant < -tolerance;
+
+        if (debugInCircleToleranceErrors)
+        {
+            bool resultWithoutTolerance = determinant < 0.0f;
+            if (resultWithoutTolerance != result)
+            {
+                inCircleComparisonMismatchCount++;
+                if (inCircleComparisonLoggedCount < 32)
+                {
+                    Debug::log(
+                        "Constrainautor InCircle mismatch without tolerance " + to_string(resultWithoutTolerance) +
+                        " new " + to_string(result) +
+                        " points " + to_string(p1) + " " + to_string(p2) + " " + to_string(p3) + " " + to_string(px) +
+                        " determinant " + to_string(determinant) +
+                        " tolerance " + to_string(tolerance) +
+                        " scale " + to_string(scale));
+                    inCircleComparisonLoggedCount++;
+                }
+            }
+        }
+
+        return result;
     }
 
     int Constrainautor::NextEdge(int e)
@@ -519,60 +607,59 @@ namespace NavigationSystemCode
         return (e % 3 == 0) ? e + 2 : e - 1;
     }
 
-    float Constrainautor::Orient2D(float ax, float ay, float bx, float by, float cx, float cy)
+    double Constrainautor::Orient2D(double ax, double ay, double bx, double by, double cx, double cy)
     {
-        float acx = ax - cx;
-        float bcx = bx - cx;
-        float acy = ay - cy;
-        float bcy = by - cy;
+        double acx = ax - cx;
+        double bcx = bx - cx;
+        double acy = ay - cy;
+        double bcy = by - cy;
         return acx * bcy - acy * bcx;
     }
 
-    float Constrainautor::InCircle(float ax, float ay, float bx, float by, float cx, float cy, float dx, float dy)
+    double Constrainautor::InCircle(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy)
     {
-        float adx = ax - dx;
-        float ady = ay - dy;
-        float bdx = bx - dx;
-        float bdy = by - dy;
-        float cdx = cx - dx;
-        float cdy = cy - dy;
+        double adx = ax - dx;
+        double ady = ay - dy;
+        double bdx = bx - dx;
+        double bdy = by - dy;
+        double cdx = cx - dx;
+        double cdy = cy - dy;
 
-        float abdet = adx * bdy - bdx * ady;
-        float bcdet = bdx * cdy - cdx * bdy;
-        float cadet = cdx * ady - adx * cdy;
-        float alift = adx * adx + ady * ady;
-        float blift = bdx * bdx + bdy * bdy;
-        float clift = cdx * cdx + cdy * cdy;
+        double abdet = adx * bdy - bdx * ady;
+        double bcdet = bdx * cdy - cdx * bdy;
+        double cadet = cdx * ady - adx * cdy;
+        double alift = adx * adx + ady * ady;
+        double blift = bdx * bdx + bdy * bdy;
+        double clift = cdx * cdx + cdy * cdy;
 
         return alift * bcdet + blift * cadet + clift * abdet;
     }
 
-    bool Constrainautor::IntersectSegments(float p1x, float p1y, float p2x, float p2y, float p3x, float p3y, float p4x, float p4y)
+    bool Constrainautor::IntersectSegments(double p1x, double p1y, double p2x, double p2y, double p3x, double p3y, double p4x, double p4y)
     {
-        float x0 = Orient2D(p1x, p1y, p3x, p3y, p4x, p4y);
-        float y0 = Orient2D(p2x, p2y, p3x, p3y, p4x, p4y);
+        double x0 = Orient2D(p1x, p1y, p3x, p3y, p4x, p4y);
+        double y0 = Orient2D(p2x, p2y, p3x, p3y, p4x, p4y);
 
         if ((x0 > 0 && y0 > 0) || (x0 < 0 && y0 < 0))
         {
             return false;
         }
 
-        float x1 = Orient2D(p3x, p3y, p1x, p1y, p2x, p2y);
-        float y1 = Orient2D(p4x, p4y, p1x, p1y, p2x, p2y);
+        double x1 = Orient2D(p3x, p3y, p1x, p1y, p2x, p2y);
+        double y1 = Orient2D(p4x, p4y, p1x, p1y, p2x, p2y);
 
         if ((x1 > 0 && y1 > 0) || (x1 < 0 && y1 < 0))
         {
             return false;
         }
 
-        float epsilon = 0.0001f;
+        const double epsilon = 0.00000001f;
         // Check for degenerate collinear case
         // if (x0 == 0 && y0 == 0 && x1 == 0 && y1 == 0)
         if (x0 < epsilon && x0 > -epsilon &&
             y0 < epsilon && y0 > -epsilon &&
             x1 < epsilon && x1 > -epsilon &&
             y1 < epsilon && y1 > -epsilon)
-        // if (x0 == 0 && y0 == 0 && x1 == 0 && y1 == 0)
         {
             return !(MathUtils::max(p3x, p4x) < MathUtils::min(p1x, p2x) ||
                      MathUtils::max(p1x, p2x) < MathUtils::min(p3x, p4x) ||

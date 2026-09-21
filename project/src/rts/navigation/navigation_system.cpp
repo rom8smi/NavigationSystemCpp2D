@@ -9,6 +9,9 @@ namespace NavigationSystemCode
 {
     void NavigationSystem::ready(GodotWorld &godot_world)
     {
+        use_debug_agents_mover = false;
+        use_debug_nav_mesh = false;
+
         agentTypes = vector<AgentType>{
             // 0 Test1
             AgentType{
@@ -88,15 +91,15 @@ namespace NavigationSystemCode
         }
     }
 
-    void NavigationSystem::create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds)
+    void NavigationSystem::create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds, const string &reason)
     {
         if (use_debug_nav_mesh)
         {
-            debug_nav_mesh.Create(navMesh, p_obstacles, p_bounds);
+            debug_nav_mesh.Create(navMesh, p_obstacles, p_bounds, reason);
         }
         else
         {
-            navMesh.Create(p_obstacles, p_bounds);
+            navMesh.Create(p_obstacles, p_bounds, reason);
         }
     }
 

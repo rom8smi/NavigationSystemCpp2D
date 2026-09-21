@@ -15,24 +15,24 @@ namespace NavigationSystemCode
 
 		Float3();
 		Float3(float p_x, float p_y, float p_z);
-		float length();
-		float length_squared();
-		float dot(Float3 b);
-		Float3 cross(Float3 &b);
+		float length() const;
+		float length_squared() const;
+		float dot(const Float3 &b) const;
+		Float3 cross(const Float3 &b) const;
 		void normalize();
-		Float3 normalized();
-		static Float3 rotate(Float3 v, Float3 k, float phi);
-		float angle_to(Float3 p_to);
-		float signed_angle_to(Float3 p_to, Float3 p_axis);
-		float get_axis(int axis);
-		Float3 project(Float3 &p_to);
-		Float3 operator+(Float3 p_v);
-		Float3 operator-(Float3 p_v);
-		Float3 operator-();
-		Float3 operator*(float r);
-		Float3 operator/(float r);
-		void operator+=(Float3 p_v);
-		string get_string();
+		Float3 normalized() const;
+		static Float3 rotate(const Float3 &v, const Float3 &k, float phi);
+		float angle_to(const Float3 &p_to) const;
+		float signed_angle_to(const Float3 &p_to, const Float3 &p_axis) const;
+		float get_axis(int axis) const;
+		Float3 project(const Float3 &p_to) const;
+		Float3 operator+(const Float3 &p_v) const;
+		Float3 operator-(const Float3 &p_v) const;
+		Float3 operator-() const;
+		Float3 operator*(float r) const;
+		Float3 operator/(float r) const;
+		Float3 &operator+=(const Float3 &p_v);
+		string get_string() const;
 	};
 }
 

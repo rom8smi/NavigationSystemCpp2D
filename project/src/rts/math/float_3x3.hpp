@@ -35,21 +35,21 @@ namespace NavigationSystemCode
             float p_zy,
             float p_zz);
 
-        static void update_looking_at_safe(Float3 &p_target, Float3 &p_up);
-        static Float3x3 looking_at(Float3 &p_target, Float3 &p_up);
+        static void update_looking_at_safe(Float3 &p_target, const Float3 &p_up);
+        static Float3x3 looking_at(const Float3 &p_target, const Float3 &p_up);
         void set_euler(const Float3 &p_euler);
-        static Float3x3 rotated(const Float3 &p_euler, Float3x3 &original);
+        static Float3x3 rotated(const Float3 &p_euler, const Float3x3 &original);
         void set_scale(const Float3 &p_euler);
         static Float3x3 from_scale(const Float3 &p_scale);
         void scale(const Float3 &p_scale);
 
-        Float3x3 operator*(Float3x3 &p_matrix);
+        Float3x3 operator*(const Float3x3 &p_matrix) const;
 
-        float tdotx(Float3 &v);
-        float tdoty(Float3 &v);
-        float tdotz(Float3 &v);
+        float tdotx(const Float3 &v) const;
+        float tdoty(const Float3 &v) const;
+        float tdotz(const Float3 &v) const;
 
-        string get_string();
+        string get_string() const;
     };
 }
 

@@ -8,11 +8,14 @@ namespace NavigationSystemCode
 {
     struct DebugNavMesh
     {
+        bool run_edges_constrained_test;
+
         void ready();
         void Create(
             NavMesh &nav_mesh,
             vector<Obstacle> &obstacles,
-            Aabb &bounds);
+            Aabb &bounds,
+            const string &reason);
     };
 }
 

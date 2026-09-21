@@ -46,7 +46,7 @@ namespace NavigationSystemCode
         zz = p_zz;
     }
 
-    void Float3x3::update_looking_at_safe(Float3 &p_target, Float3 &p_up)
+    void Float3x3::update_looking_at_safe(Float3 &p_target, const Float3 &p_up)
     {
         if ((p_target - p_up).length_squared() < 0.01f || (p_target + p_up).length_squared() < 0.01f)
         {
@@ -55,7 +55,7 @@ namespace NavigationSystemCode
         }
     }
 
-    Float3x3 Float3x3::looking_at(Float3 &p_target, Float3 &p_up)
+    Float3x3 Float3x3::looking_at(const Float3 &p_target, const Float3 &p_up)
     {
         Float3 v_z = -p_target.normalized();
         Float3 v_x = p_up.cross(v_z);
@@ -93,7 +93,7 @@ namespace NavigationSystemCode
         *this = ymat * xmat * zmat;
     }
 
-    Float3x3 Float3x3::rotated(const Float3 &p_euler, Float3x3 &original)
+    Float3x3 Float3x3::rotated(const Float3 &p_euler, const Float3x3 &original)
     {
         Float3x3 rotated_basis;
         rotated_basis.set_euler(p_euler);
@@ -125,7 +125,7 @@ namespace NavigationSystemCode
         zz *= p_scale.z;
     }
 
-    Float3x3 Float3x3::operator*(Float3x3 &p_matrix)
+    Float3x3 Float3x3::operator*(const Float3x3 &p_matrix) const
     {
         Float3 rowx = Float3(xx, xy, xz);
         Float3 rowy = Float3(yx, yy, yz);
@@ -138,20 +138,20 @@ namespace NavigationSystemCode
     }
 
     // transposed dot products
-    float Float3x3::tdotx(Float3 &v)
+    float Float3x3::tdotx(const Float3 &v) const
     {
         return xx * v.x + yx * v.y + zx * v.z;
     }
-    float Float3x3::tdoty(Float3 &v)
+    float Float3x3::tdoty(const Float3 &v) const
     {
         return xy * v.x + yy * v.y + zy * v.z;
     }
-    float Float3x3::tdotz(Float3 &v)
+    float Float3x3::tdotz(const Float3 &v) const
     {
         return xz * v.x + yz * v.y + zz * v.z;
     }
 
-    string Float3x3::get_string()
+    string Float3x3::get_string() const
     {
         Float3 colx = Float3(xx, yx, zx);
         Float3 coly = Float3(xy, yy, zy);

@@ -18,32 +18,33 @@ namespace NavigationSystemCode
 		y = p_y;
 	}
 
-	float Float2::length()
+	float Float2::length() const
 	{
 		return sqrt(x * x + y * y);
 	}
 
-	float Float2::length_squared()
+	float Float2::length_squared() const
 	{
 		return x * x + y * y;
 	}
 
-	float Float2::dot(Float2 &p_v)
+	float Float2::dot(const Float2 &p_v) const
 	{
 		return x * p_v.x + y * p_v.y;
 	}
 
-	float Float2::cross(Float2 &p_v)
+	float Float2::cross(const Float2 &p_v) const
 	{
 		return x * p_v.y - y * p_v.x;
 	}
 
-	float Float2::angle_to(Float2 &p_v)
+	// Returns angle between [-180, 180] degrees. See Tests::angle_to_test() for confirmation
+	float Float2::angle_to(const Float2 &p_v) const
 	{
 		return atan2(cross(p_v), dot(p_v));
 	}
 
-	Float2 Float2::rotated(float angle)
+	Float2 Float2::rotated(float angle) const
 	{
 		float sine = sin(angle);
 		float cosi = cos(angle);
@@ -61,7 +62,7 @@ namespace NavigationSystemCode
 		}
 	}
 
-	Float2 Float2::normalized()
+	Float2 Float2::normalized() const
 	{
 		float p_x = x;
 		float p_y = y;
@@ -76,7 +77,7 @@ namespace NavigationSystemCode
 		return Float2(p_x, p_y);
 	}
 
-	float Float2::get_axis(int axis)
+	float Float2::get_axis(int axis) const
 	{
 		if (axis == 0)
 		{
@@ -85,43 +86,44 @@ namespace NavigationSystemCode
 		return y;
 	}
 
-	Float2 Float2::project(Float2 &p_to)
+	Float2 Float2::project(const Float2 &p_to) const
 	{
 		return p_to * (dot(p_to) / p_to.length_squared());
 	}
 
-	Float2 Float2::operator+(Float2 p_v)
+	Float2 Float2::operator+(const Float2 &p_v) const
 	{
 		return Float2(x + p_v.x, y + p_v.y);
 	}
 
-	void Float2::operator+=(Float2 p_v)
+	Float2 &Float2::operator+=(const Float2 &p_v)
 	{
 		x += p_v.x;
 		y += p_v.y;
+		return *this;
 	}
 
-	Float2 Float2::operator-(Float2 p_v)
+	Float2 Float2::operator-(const Float2 &p_v) const
 	{
 		return Float2(x - p_v.x, y - p_v.y);
 	}
 
-	Float2 Float2::operator*(float r)
+	Float2 Float2::operator*(float r) const
 	{
 		return Float2(x * r, y * r);
 	}
 
-	Float2 Float2::operator/(float r)
+	Float2 Float2::operator/(float r) const
 	{
 		return Float2(x / r, y / r);
 	}
 
-	Float2 Float2::operator-()
+	Float2 Float2::operator-() const
 	{
 		return Float2(-x, -y);
 	}
 
-	string Float2::get_string()
+	string Float2::get_string() const
 	{
 		return "(" + to_string(x) + ", " + to_string(y) + ")";
 	}

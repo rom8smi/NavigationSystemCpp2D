@@ -640,7 +640,7 @@ namespace NavigationSystemCode
         NavigationSystem &navigation_system,
         GodotWorld &godot_world)
     {
-        navigation_system.create_nav_mesh(navigation_system.obstacles, navigation_system.paddedWorldBounds);
+        navigation_system.create_nav_mesh(navigation_system.obstacles, navigation_system.paddedWorldBounds, "navigation_tests_system");
         navigation_system.pathfinding.CreateNodes(navigation_system.navMesh);
 
         create_all_nav_mesh_drawers(navigation_system, godot_world);

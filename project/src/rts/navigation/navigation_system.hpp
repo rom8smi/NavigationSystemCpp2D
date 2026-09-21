@@ -21,8 +21,8 @@ namespace NavigationSystemCode
         Pathfinding pathfinding;
         AgentsMover agentsMover;
         DebugAgentsMover debug_agents_mover;
-        bool use_debug_agents_mover = false;
-        bool use_debug_nav_mesh = false;
+        bool use_debug_agents_mover;
+        bool use_debug_nav_mesh;
 
         vector<Agent> agents;
         vector<Float2> agentPositions;
@@ -39,7 +39,7 @@ namespace NavigationSystemCode
         float largestAgentRadius;
 
         void ready(GodotWorld &godot_world);
-        void create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds);
+        void create_nav_mesh(vector<Obstacle> &p_obstacles, Aabb &p_bounds, const string &reason);
         void process(
             float delta);
         void AddAgent(Float2 &position, int agentTypeIndex, int unitIndex, float speed);

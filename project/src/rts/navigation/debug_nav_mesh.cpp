@@ -1,11 +1,14 @@
 #include "debug_nav_mesh.hpp"
 #include "rts/math/math_utils.hpp"
 #include <chrono>
+#include "rts/navigation/navigation_tests/constrainautor_tests.hpp"
 
 namespace NavigationSystemCode
 {
     void DebugNavMesh::ready()
     {
+        run_edges_constrained_test = true;
+
         File fileCreate;
         fileCreate.open("DebugNavMeshCreate.dat");
         fileCreate.write("# allPointsCount GetSubdividedWorldBoundEdges PointsClear AddObstaclesWithConstraints Delaunator Constrainautor allTriangleBounds CalculateTriangleCentroids CalculateEdgesAroundPointsMap FindWalkableEdges FindWalkableTriangles ResolveObstacleHullEdges CalulateHullEdgeTriangulationEdgeToObstacleIndices CalculateSizeOfSmallestHullEdge CreateTriangulationSearch CreateVisitedTriangles Total\n");
@@ -15,7 +18,8 @@ namespace NavigationSystemCode
     void DebugNavMesh::Create(
         NavMesh &nav_mesh,
         vector<Obstacle> &obstacles,
-        Aabb &bounds)
+        Aabb &bounds,
+        const string &reason)
     {
         const auto t_initial = std::chrono::high_resolution_clock::now();
         nav_mesh.worldBounds = bounds;
@@ -50,9 +54,14 @@ namespace NavigationSystemCode
         nav_mesh.delaunator.Create(nav_mesh.allPoints);
         nav_mesh.delaunator.ClearTemporaryLists();
         const auto t_delaunator = std::chrono::high_resolution_clock::now();
-        nav_mesh.constrainautor.Create(nav_mesh.delaunator, constraint_edges);
+        nav_mesh.constrainautor.Create(nav_mesh.delaunator, constraint_edges, reason);
         nav_mesh.constrainautor.ClearTemporaryLists();
         const auto t_constrainautor = std::chrono::high_resolution_clock::now();
+
+        if (run_edges_constrained_test)
+        {
+            ConstrainautorTests::edges_constrained_test("edges_constrained_test", nav_mesh.delaunator, constraint_edges);
+        }
 
         nav_mesh.allTriangles = nav_mesh.delaunator.GetTriangles();
         nav_mesh.allEdges = nav_mesh.delaunator.GetEdges();
