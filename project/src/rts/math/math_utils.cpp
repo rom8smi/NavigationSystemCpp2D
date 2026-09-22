@@ -153,6 +153,16 @@ namespace NavigationSystemCode
 		return (int)f;
 	}
 
+	int MathUtils::floor(double d)
+	{
+		if (d < 0.0)
+		{
+			return (int)d - 1;
+		}
+
+		return (int)d;
+	}
+
 	float MathUtils::sqrt(float f)
 	{
 		return std::sqrt(f);

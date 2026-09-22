@@ -165,15 +165,17 @@ namespace NavigationSystemCode
             i2y = y;
         }
 
-        Float2 center = Circumcenter(i0x, i0y, i1x, i1y, i2x, i2y);
-        cx_final = center.x;
-        cy_final = center.y;
+        double centerX;
+        double centerY;
+        Circumcenter(i0x, i0y, i1x, i1y, i2x, i2y, centerX, centerY);
+        cx_final = centerX;
+        cy_final = centerY;
 
         dists.resize(n);
 
         for (int i = 0; i < n; i++)
         {
-            dists[i] = Dist(coords[2 * i], coords[2 * i + 1], center.x, center.y);
+            dists[i] = Dist(coords[2 * i], coords[2 * i + 1], centerX, centerY);
         }
 
         // sort the points by distance from the seed triangle circumcenter
@@ -480,7 +482,7 @@ namespace NavigationSystemCode
         return x * x + y * y;
     }
 
-    Float2 Delaunator::Circumcenter(double ax, double ay, double bx, double by, double cx, double cy)
+    void Delaunator::Circumcenter(double ax, double ay, double bx, double by, double cx, double cy, double &x, double &y)
     {
         double dx = bx - ax;
         double dy = by - ay;
@@ -489,10 +491,8 @@ namespace NavigationSystemCode
         double bl = dx * dx + dy * dy;
         double cl = ex * ex + ey * ey;
         double d = 0.5f / (dx * ey - dy * ex);
-        double x = ax + (ey * bl - dy * cl) * d;
-        double y = ay + (dx * cl - ex * bl) * d;
-
-        return Float2(x, y);
+        x = ax + (ey * bl - dy * cl) * d;
+        y = ay + (dx * cl - ex * bl) * d;
     }
 
     double Delaunator::Dist(double ax, double ay, double bx, double by)

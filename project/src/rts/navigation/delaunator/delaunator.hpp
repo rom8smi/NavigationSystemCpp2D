@@ -60,7 +60,7 @@ namespace NavigationSystemCode
         static double PseudoAngle(double dx, double dy);
         static bool Orient(double px, double py, double qx, double qy, double rx, double ry);
         static double Circumradius(double ax, double ay, double bx, double by, double cx, double cy);
-        static Float2 Circumcenter(double ax, double ay, double bx, double by, double cx, double cy);
+        static void Circumcenter(double ax, double ay, double bx, double by, double cx, double cy, double &x, double &y);
         static double Dist(double ax, double ay, double bx, double by);
         vector<DelaunatorTriangle> GetTriangles();
         vector<DelaunatorEdge> GetEdges();

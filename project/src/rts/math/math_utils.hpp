@@ -33,8 +33,9 @@ namespace NavigationSystemCode
 		static double min(double a, double b);
 		static double max(double a, double b);
 		static int floor(float f);
-		static float sqrt(float f);
-		static float pow(float f, float p);
+        static int floor(double d);
+        static float sqrt(float f);
+        static float pow(float f, float p);
 		static float sin(float f);
 		static float cos(float f);
 		static float atan2(float y, float x);
